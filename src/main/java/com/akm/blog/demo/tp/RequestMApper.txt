@@ -1,0 +1,38 @@
+package de.zweelo.gateway.service.mapper;
+
+import de.zweelo.gateway.domain.*;
+import de.zweelo.gateway.service.dto.RideRequestDTO;
+
+import org.mapstruct.*;
+
+/**
+ * Mapper for the entity {@link RideRequest} and its DTO {@link RideRequestDTO}.
+ */
+@Mapper(componentModel = "spring", uses = {UserMapper.class, ChildMapper.class, LocationMapper.class})
+public interface RideRequestMapper extends EntityMapper<RideRequestDTO, RideRequest> {
+
+    @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "user.login", target = "userLogin")
+    @Mapping(source = "child.id", target = "childId")
+    @Mapping(source = "pickupLocation.id", target = "pickupLocationId")
+    @Mapping(source = "dropLocation.id", target = "dropLocationId")
+    @Mapping(source = "pickupLocation", target = "pickupLocation")
+    @Mapping(source = "dropLocation", target = "dropLocation")
+    @Mapping(source = "child", target = "childDTO")
+    RideRequestDTO toDto(RideRequest rideRequest);
+
+    @Mapping(source = "userId", target = "user")
+    @Mapping(source = "childId", target = "child.id")
+    @Mapping(source = "pickupLocationId", target = "pickupLocation")
+    @Mapping(source = "dropLocationId", target = "dropLocation")
+    RideRequest toEntity(RideRequestDTO rideRequestDTO);
+
+    default RideRequest fromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        RideRequest rideRequest = new RideRequest();
+        rideRequest.setId(id);
+        return rideRequest;
+    }
+}
